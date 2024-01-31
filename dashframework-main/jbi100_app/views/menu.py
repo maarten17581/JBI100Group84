@@ -36,21 +36,20 @@ def generate_filter():
             html.Div(
                 id="filter-container",
                 children=[html.Div(
-                        id="column-filter",
+                        id="feature-filter",
                         className="ten columns",
                         children=[dcc.Dropdown(
-                            id="select-filter-column",
-                            options=[{"label": "Select column", "value": 0}],
-                            value={"label": "Select column", "value": 0},
+                            id="select-filter-feature",
+                            options=[],
                         ),]
                     ),
                     html.Div(
-                        id="comparitor-filter",
+                        id="comparator-filter",
                         className="two columns",
                         children=[dcc.Dropdown(
-                            id="select-filter-comparitor",
+                            id="select-filter-comparator",
                             options=[{"label": "=", "value": "="},{"label": "≠", "value": "≠"},{"label": "≥", "value": "≥"},{"label": "≤", "value": "≤"},{"label": ">", "value": ">"},{"label": "<", "value": "<"}],
-                            value={"label": "=", "value": "="},
+                            value="=",
                         ),]
                     ),
                     html.Br(),
@@ -65,6 +64,11 @@ def generate_filter():
                         className="two columns",
                         children=[html.Button("Add", style={"textAlign": "float-center"}, id="add-filter-button", className="twelve columns")]
                     ),
+                    html.Div(
+                        id="filter-elements",
+                        className="twelve columns",
+                        children=[]
+                    )
                 ]
             ),
             html.Div(
@@ -84,6 +88,15 @@ def generate_control_card():
         id="control-card",
         children=[
             html.Label("Add Plot"),
+            html.Div(
+                id="add-plot-container",
+                className="twelve columns",
+                children=[dcc.Dropdown(
+                    id="add-plot-dropdown",
+                    options=[{"label": "Scatterplot", "value": "Scatterplot"},{"label": "Lineplot", "value": "Lineplot"},{"label": "Barplot", "value": "Barplot"},],
+                    value="Scatterplot",
+                ),]
+            ),
             html.Button("Add Plot", id="add-plot-button", disabled=True),
         ], style={"textAlign": "float-left"}
     )

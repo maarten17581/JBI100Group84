@@ -1,5 +1,5 @@
-from dash import Dash
+from dash_extensions.enrich import DashProxy, MultiplexerTransform
 
 
-app = Dash(__name__)
+app = DashProxy(prevent_initial_callbacks=True, transforms=[MultiplexerTransform()])
 app.title = "JBI100 Template"
