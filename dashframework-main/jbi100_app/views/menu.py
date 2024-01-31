@@ -10,10 +10,14 @@ def generate_description_card():
     return html.Div(
         id="description-card",
         children=[
-            html.H5("Example dashboard"),
+            html.H5("CreditVis"),
             html.Div(
                 id="intro",
-                children="You can use this as a basic template for your JBI100 visualization project.",
+                children="Upload your credit data below and start visualizing!",
+            ),
+            html.Div(
+                id="makers",
+                children="By group 84 for the course JBI100, with members Maarten Dankers, Wout Heijne and Ties Hustinx",
             ),
         ],
     )
