@@ -3,6 +3,9 @@ import plotly.graph_objects as go
 
 
 class Barplot(html.Div):
+    """
+    A Div containing the dropdowns and figures for a specific bar plot
+    """
     def __init__(self, name, n_clicks, df):
         self.df = df
 

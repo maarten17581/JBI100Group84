@@ -23,6 +23,10 @@ def generate_description_card():
     )
     
 def generate_database_button():
+    """
+
+    :return: A Div containing the data upload button.
+    """
     return dcc.Upload(
                 id="upload-data",
                 className="twelve columns",
@@ -33,6 +37,10 @@ def generate_database_button():
             )
 
 def generate_filter():
+    """
+
+    :return: A Div containing the dropdowns and buttons for the filter setting.
+    """
     return html.Div(
         id="generate-filter",
         children=[
@@ -86,7 +94,7 @@ def generate_filter():
 def generate_control_card():
     """
 
-    :return: A Div containing controls for graphs.
+    :return: A Div containing the dropdown and button to add plots.
     """
     return html.Div(
         id="control-card",

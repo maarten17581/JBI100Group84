@@ -1,7 +1,6 @@
 import base64
 import io
 from math import ceil
-from numpy import dtype
 import pandas as pd
 from jbi100_app.main import app
 from jbi100_app.views.menu import make_menu_layout
@@ -12,13 +11,13 @@ from jbi100_app.views.filter import Filter
 
 from dash import html, dcc, ALL, MATCH
 import dash
-import plotly.express as px
-from dash_extensions.enrich import Output, DashProxy, Input, MultiplexerTransform, State
+from dash_extensions.enrich import Output, Input, State
 import plotly.graph_objects as go
 
 
 if __name__ == '__main__':
     
+    # The datatypes of all attributes in the data, to compare and filter out wrong data
     dtypelist = {
         'ID' : 'object', 'Customer_ID' : 'category', 'Month' : 'category',
         'Name': 'category', 'Age': 'int64', 'SSN' : 'object', 'Occupation' : 'category',
@@ -35,10 +34,16 @@ if __name__ == '__main__':
     app.layout = html.Div(
         id="app-container",
         children=[
-            
+            # The main dataframe storing all data that is uploaded
             dcc.Store(id="stored-data", data=""),
+            
+            # The dataframe storing all data that is filtered on the main filters
             dcc.Store(id="filtered-data", data=""),
+            
+            # The dataframe storing all data that is selected in a figure
             dcc.Store(id="selected-data", data=""),
+            
+            # The id of the figure that is selected from to stop updating this one
             dcc.Store(id="selected-id", data=""),
             
             # Left column
@@ -57,7 +62,8 @@ if __name__ == '__main__':
         ],
     )
 
-    # Define interactions
+    # Add plot button interaction
+    # Adds a plot based on the type of plot in the dropdown
     @app.callback(
         Output('right-column', 'children'),
         Input('add-plot-button', 'n_clicks'),
@@ -86,7 +92,9 @@ if __name__ == '__main__':
             return children
         else:
             return dash.no_update
-        
+    
+    # Updates a scatter plot if the attributes used for it change
+    # or if the filtered or selected data from filters or selections changes
     @app.callback(
         Output({"type": "scatter-plot", "index": MATCH}, 'figure'),
         Output({"type": "scatter-data-used", "index": MATCH}, 'data'),
@@ -138,6 +146,8 @@ if __name__ == '__main__':
         else:
             return dash.no_update, dash.no_update
     
+    # Updates a line plot if the attributes used for it change
+    # or if the filtered or selected data from filters or selections changes
     @app.callback(
         Output({"type": "line-plot", "index": MATCH}, 'figure'),
         Output({"type": "line-data-used", "index": MATCH}, 'data'),
@@ -194,7 +204,9 @@ if __name__ == '__main__':
             return update_line(color, x_axis, y_axis, df), dfstring
         else:
             return dash.no_update, dash.no_update
-        
+    
+    # Updates a bar plot if the attributes used for it change
+    # or if the filtered or selected data from filters or selections changes
     @app.callback(
         Output({"type": "bar-plot", "index": MATCH}, 'figure'),
         Output({"type": "bar-data-used", "index": MATCH}, 'data'),
@@ -230,6 +242,9 @@ if __name__ == '__main__':
         else:
             return dash.no_update, dash.no_update
 
+    # Handles the uploading of a csv file in the correct format
+    # Filters out all rows that do not follow the correct format,
+    # where underscore is removed and space is set to underscore to store in the dataframe
     @app.callback(
         Output('add-plot-button', 'disabled'),
         Output('stored-data', 'data'),
@@ -308,6 +323,7 @@ if __name__ == '__main__':
 
         return dash.no_update, dash.no_update, dash.no_update, dash.no_update
     
+    # Handles adding and removing filter elements and updating the filtered dataframe
     @app.callback(
         Output('filter-card-container', 'children'),
         Output('filtered-data', 'data'),
@@ -380,6 +396,7 @@ if __name__ == '__main__':
         
         return children, df.to_json()
     
+    # Updates the selection dataframe if a selection is made in a scatter plot
     @app.callback(
         Output('selected-data', 'data'),
         Output('selected-id', 'data'),
@@ -416,6 +433,7 @@ if __name__ == '__main__':
         else:
             return dash.no_update, dash.no_update
     
+    # Updates the selection dataframe if a selection is made in a line plot
     @app.callback(
         Output('selected-data', 'data'),
         Output('selected-id', 'data'),
@@ -452,6 +470,7 @@ if __name__ == '__main__':
         else:
             return dash.no_update, dash.no_update
     
+    # Updates the selection dataframe if a selection is made in a bar plot
     @app.callback(
         Output('selected-data', 'data'),
         Output('selected-id', 'data'),
@@ -497,6 +516,7 @@ if __name__ == '__main__':
         else:
             return dash.no_update, dash.no_update
     
+    # Makes the updated scatter plot based on the attributes and dataframe
     def update_scatter(selected_color, feature_x, feature_y, df):
         fig = go.Figure()
         print("got here")
@@ -559,6 +579,7 @@ if __name__ == '__main__':
         print("returned fig")
         return fig
     
+    # Makes the updated line plot based on the attributes and dataframe
     def update_line(selected_color, feature_x, feature_y, df):
         fig = go.Figure()
         print("got here")
@@ -620,7 +641,8 @@ if __name__ == '__main__':
         )
         print("returned fig")
         return fig
-            
+    
+    # Makes the updated bar plot based on the attributes and dataframe
     def update_bar(feature_x, df):
         fig = go.Figure()
         print("got here")

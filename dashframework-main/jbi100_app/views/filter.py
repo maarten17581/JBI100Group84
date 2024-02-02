@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 
 class Filter(html.Div):
     def __init__(self, filter_feature, comparator, value, n_clicks):
+        # A filter object having the attribute, which comparator is used and what value it is compared to
         self.filter_feature = filter_feature
         self.comparator = comparator
         self.value = value
